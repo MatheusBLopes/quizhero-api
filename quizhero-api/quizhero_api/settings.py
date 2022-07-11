@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     # 3rd party libs
     "rest_framework",
     "apps.quizzes",
+    "apps.core",
 ]
 
 MIDDLEWARE = [
