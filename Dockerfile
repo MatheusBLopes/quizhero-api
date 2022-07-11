@@ -16,10 +16,10 @@ WORKDIR /app
 COPY pyproject.toml poetry.lock /app/
 
 
-RUN poetry config virtualenvs.create false && poetry install --no-dev
+RUN poetry config virtualenvs.create false && poetry install
 
 ADD . /app/
 
 EXPOSE 8000
 
-ENTRYPOINT ["gunicorn", "-c", "gunicorn_config.py", "quizhero_api.wsgi:application"]
+CMD ["gunicorn", "-c", "gunicorn_config.py", "quizhero_api.wsgi:application"]
