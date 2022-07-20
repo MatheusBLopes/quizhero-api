@@ -1,6 +1,6 @@
-from rest_framework.permissions import SAFE_METHODS, BasePermission
+from rest_framework import permissions
 
 
-class IsAdmindOrReadOnly(BasePermission):
+class IsAdmindOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
-        return bool(request.method in SAFE_METHODS or request.user.is_staff and request.user)
+        return bool(request.method in permissions.SAFE_METHODS or request.user.is_staff and request.user)
