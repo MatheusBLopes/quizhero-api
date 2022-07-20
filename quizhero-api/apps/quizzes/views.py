@@ -1,10 +1,12 @@
 from rest_framework import viewsets
 
 from apps.quizzes.models import Answer, Category, Question, Quiz
+from apps.quizzes.permissions import IsAdmindOrReadOnly
 from apps.quizzes.serializers import AnswerSerializer, CategorySerializer, QuestionSerializer, QuizSerializer
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAdmindOrReadOnly,)
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 

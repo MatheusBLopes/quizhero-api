@@ -1,5 +1,5 @@
 from rest_framework import generics, status
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -22,8 +22,6 @@ class RegisterView(generics.CreateAPIView):
 
 
 class ChangePasswordView(APIView):
-    permission_classes = (IsAuthenticated,)
-
     def put(self, request):
         user = User.objects.filter(pk=request.auth["user_id"]).first()
         serializer = ChangePasswordSerializer(user, data=request.data)
@@ -37,8 +35,6 @@ class ChangePasswordView(APIView):
 
 
 class UpdateProfileView(APIView):
-    permission_classes = (IsAuthenticated,)
-
     def put(self, request):
         user = User.objects.filter(pk=request.auth["user_id"]).first()
         serializer = UpdateUserSerializer(user, data=request.data)

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from apps.core.models import UUIDUser as User
 from apps.quizzes.models import Answer, Category, Question, Quiz
 
 
@@ -33,16 +34,18 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 
 class QuizSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(read_only=True, default=serializers.CurrentUserDefault())
     questions = QuestionSerializer(many=True)
 
     class Meta:
         model = Quiz
-        fields = ["id", "title", "category", "questions", "code"]
+        fields = ["id", "title", "category", "questions", "code", "user"]
         extra_kwargs = {"code": {"read_only": True}}
 
     def create(self, validated_data):
         questions_data = validated_data.pop("questions")
-        quiz = Quiz.objects.create(**validated_data)
+        user = User.objects.filter(pk=self.data["user"]).first()
+        quiz = Quiz.objects.create(user=user, **validated_data)
 
         for questions in questions_data:
             question_serializer = QuestionSerializer(data={**questions, "quiz": quiz.id})
