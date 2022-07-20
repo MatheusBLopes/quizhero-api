@@ -1,5 +1,7 @@
 from django.db import models
 
+from apps.quizzes.utils import generate_quiz_code
+
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
@@ -11,6 +13,7 @@ class Category(models.Model):
 class Quiz(models.Model):
     title = models.CharField(max_length=255, blank=False)
     category = models.ForeignKey(Category, related_name="quizzes", null=True, on_delete=models.SET_NULL)
+    code = models.CharField(editable=False, max_length=16, unique=True, default=generate_quiz_code)
 
     def __str__(self):
         return self.title
