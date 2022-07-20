@@ -2,6 +2,7 @@
 <h1>
   <p align="center">
     Quizhero Api
+    WIP
   </p>
 </h1>
 
@@ -24,13 +25,13 @@ This project was made using the following technologies:
 * Django Rest Framework
 * Gunicorn
 * Docker
-* Unit Tests
 * Pre-Commit
 
 # :rocket: Features
 
 * JWT Authentication
 * Quiz CRUD
+* Unit Tests
 
 # :construction_worker: How to run
 ```bash
