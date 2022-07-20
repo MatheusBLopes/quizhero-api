@@ -54,3 +54,7 @@ docs/_build/
 
 # VSCode
 .vscode
+
+
+# Database
+*.sqlite3
