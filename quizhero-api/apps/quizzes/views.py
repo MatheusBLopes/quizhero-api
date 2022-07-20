@@ -10,6 +10,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 
 class QuizViewSet(viewsets.ModelViewSet):
+    lookup_field = "code"
     queryset = Quiz.objects.all()
     serializer_class = QuizSerializer
 
