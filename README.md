@@ -1,10 +1,7 @@
 
 <h1>
   <p align="center">
-    Quizhero Api
-  </p>
-  <p align="center">
-    WIP
+    Quizhero Api (WIP)
   </p>
 </h1>
 
