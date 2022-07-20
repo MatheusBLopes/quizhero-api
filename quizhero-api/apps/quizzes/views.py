@@ -1,9 +1,9 @@
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework import viewsets
+
+from apps.quizzes.models import Category
+from apps.quizzes.serializers import CategorySerializer
 
 
-# Create your views here.
-class TestQuizView(APIView):
-    def get(self, request):
-        return Response(True, status=status.HTTP_200_OK)
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer

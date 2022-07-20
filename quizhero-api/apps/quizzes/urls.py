@@ -1,7 +1,11 @@
-from django.urls import path
+from django.urls import include, path
+from rest_framework import routers
 
-from apps.quizzes.views import TestQuizView
+from apps.quizzes.views import CategoryViewSet
 
 app_name = "quizzes"
 
-urlpatterns = [path("quizzes/test", TestQuizView.as_view(), name="test-quiz-view")]
+router = routers.DefaultRouter()
+router.register("category", CategoryViewSet, basename="Categories")
+
+urlpatterns = [path("", include(router.urls))]
