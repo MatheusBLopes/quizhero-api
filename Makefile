@@ -28,3 +28,6 @@ logs:
 
 run-gunicorn:
 	gunicorn -c gunicorn_config.py quizhero_api.wsgi:application
+
+test:
+	poetry run pytest -sx $(PROJECT_NAME) --reuse-db --create-db
