@@ -56,3 +56,8 @@ class Answer(UUIDModel):
 
     def __str__(self):
         return self.description
+
+
+class Favorite(UUIDModel):
+    user = models.ForeignKey(User, related_name="favorites", on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, related_name="favorites", on_delete=models.CASCADE, to_field="code")

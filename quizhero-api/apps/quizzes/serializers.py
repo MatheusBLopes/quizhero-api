@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from apps.core.models import UUIDUser as User
-from apps.quizzes.models import Answer, Category, Question, Quiz
+from apps.quizzes.models import Answer, Category, Favorite, Question, Quiz
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -97,3 +97,29 @@ class QuizSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(read_only=True, default=serializers.CurrentUserDefault())
+
+    class Meta:
+        model = Favorite
+        fields = ["id", "quiz", "user"]
+
+    def create(self, validated_data):
+        user = User.objects.filter(pk=self.data["user"]).first()
+        quiz = Quiz.objects.filter(code=validated_data.get("quiz").code).first()
+
+        if quiz.user != user and quiz.status == "Private":
+            raise serializers.ValidationError(
+                {"detail": "You can't favorite a private quiz that is not yours"}
+            )
+
+        already_favorite = Favorite.objects.filter(user=user, quiz=quiz)
+
+        if already_favorite:
+            raise serializers.ValidationError({"detail": "This quiz has already been favorited by you"})
+
+        favorite = Favorite.objects.create(user=user, quiz=quiz)
+
+        return favorite

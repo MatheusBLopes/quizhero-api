@@ -1,9 +1,17 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import generics, viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
 
-from apps.quizzes.models import Answer, Category, Question, Quiz
+from apps.quizzes.models import Answer, Category, Favorite, Question, Quiz
 from apps.quizzes.permissions import IsAdmindOrReadOnly
-from apps.quizzes.serializers import AnswerSerializer, CategorySerializer, QuestionSerializer, QuizSerializer
+from apps.quizzes.serializers import (
+    AnswerSerializer,
+    CategorySerializer,
+    FavoriteSerializer,
+    QuestionSerializer,
+    QuizSerializer,
+)
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -37,3 +45,33 @@ class AnswerViewSet(viewsets.ModelViewSet):
 class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+
+
+class FavoriteViewSet(viewsets.ModelViewSet):
+    queryset = Favorite.objects.all()
+    serializer_class = FavoriteSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+
+        return Favorite.objects.filter(user=user)
+
+    def delete(self, request):
+        favorite = get_object_or_404(Favorite, quiz=request.data["quiz"])
+        favorite.delete()
+
+        return Response(status=204)
+
+    def list(self, request, *args, **kwargs):
+        favorites_queryset = self.filter_queryset(self.get_queryset())
+        codes_list = [x.quiz.code for x in favorites_queryset]
+
+        quizzes_queryset = Quiz.objects.filter(code__in=codes_list)
+
+        page = self.paginate_queryset(quizzes_queryset)
+        if page is not None:
+            serializer = QuizSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = QuizSerializer(quizzes_queryset, many=True)
+        return Response(serializer.data)
