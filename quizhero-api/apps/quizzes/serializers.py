@@ -11,6 +11,8 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class AnswerSerializer(serializers.ModelSerializer):
+    id = serializers.UUIDField(required=False)
+
     class Meta:
         model = Answer
         fields = ["id", "description", "right_answer"]
@@ -18,6 +20,7 @@ class AnswerSerializer(serializers.ModelSerializer):
 
 class QuestionSerializer(serializers.ModelSerializer):
     answers = AnswerSerializer(many=True)
+    id = serializers.UUIDField(required=False)
 
     class Meta:
         model = Question
@@ -31,6 +34,25 @@ class QuestionSerializer(serializers.ModelSerializer):
             Answer.objects.create(question=question, **answer)
 
         return question
+
+    def update(self, instance, validated_data):
+        instance.description = validated_data["description"]
+
+        answers = validated_data.get("answers")
+        serializer = AnswerSerializer()
+
+        for answer in answers:
+            if answer.get("id"):
+                old_answer = Answer.objects.filter(pk=answer["id"]).first()
+                serializer.update(old_answer, answer)
+            else:
+                serializer = AnswerSerializer(data={**answer, "quiz": instance.id})
+                serializer.is_valid()
+                serializer.save()
+
+        instance.save()
+
+        return instance
 
 
 class QuizSerializer(serializers.ModelSerializer):
@@ -53,3 +75,25 @@ class QuizSerializer(serializers.ModelSerializer):
             question_serializer.save()
 
         return quiz
+
+    def update(self, instance, validated_data):
+        instance.title = validated_data["title"]
+        instance.status = validated_data["status"]
+        instance.category = validated_data["category"]
+
+        questions = validated_data.get("questions")
+        serializer = QuestionSerializer()
+
+        for question in questions:
+            if question.get("id"):
+                old_question = Question.objects.filter(pk=question["id"]).first()
+
+                serializer.update(old_question, question)
+            else:
+                serializer = QuestionSerializer(data={**question, "quiz": instance.id})
+                serializer.is_valid()
+                serializer.save()
+
+        instance.save()
+
+        return instance
