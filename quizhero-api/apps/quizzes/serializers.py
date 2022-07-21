@@ -39,7 +39,7 @@ class QuizSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Quiz
-        fields = ["id", "title", "category", "questions", "code", "user"]
+        fields = ["id", "title", "category", "questions", "code", "user", "status"]
         extra_kwargs = {"code": {"read_only": True}}
 
     def create(self, validated_data):

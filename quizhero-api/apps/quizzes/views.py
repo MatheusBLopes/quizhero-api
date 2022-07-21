@@ -1,4 +1,5 @@
-from rest_framework import viewsets
+from rest_framework import generics, viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from apps.quizzes.models import Answer, Category, Question, Quiz
 from apps.quizzes.permissions import IsAdmindOrReadOnly
@@ -13,7 +14,18 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 class QuizViewSet(viewsets.ModelViewSet):
     lookup_field = "code"
-    queryset = Quiz.objects.all()
+    serializer_class = QuizSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+
+        return Quiz.objects.filter(user=user)
+
+
+class PublicQuizViewSet(generics.ListAPIView):
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    lookup_field = "code"
+    queryset = Quiz.objects.filter(status="Public")
     serializer_class = QuizSerializer
 
 
