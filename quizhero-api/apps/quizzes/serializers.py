@@ -26,6 +26,21 @@ class QuestionSerializer(serializers.ModelSerializer):
         model = Question
         fields = ["id", "quiz", "description", "answers"]
 
+    def validate(self, attrs):
+        answers = attrs["answers"]
+        righ_answers_fields = [x["right_answer"] for x in answers]
+        right_answer_repetitions = righ_answers_fields.count(True)
+
+        if right_answer_repetitions > 1:
+            raise serializers.ValidationError({"answer": "Only one correct answer is allowed in a question"})
+
+        if right_answer_repetitions == 0:
+            raise serializers.ValidationError(
+                {"answer": "At least one correct answer is required on a question"}
+            )
+
+        return attrs
+
     def create(self, validated_data):
         answers_data = validated_data.pop("answers")
         question = Question.objects.create(**validated_data)
