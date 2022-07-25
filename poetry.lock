@@ -636,6 +636,17 @@ docs = ["proselint (>=0.10.2)", "sphinx (>=3)", "sphinx-argparse (>=0.2.5)", "sp
 testing = ["coverage (>=4)", "coverage-enable-subprocess (>=1)", "flaky (>=3)", "pytest (>=4)", "pytest-env (>=0.6.2)", "pytest-freezegun (>=0.4.1)", "pytest-mock (>=2)", "pytest-randomly (>=1)", "pytest-timeout (>=1)", "packaging (>=20.0)"]
 
 [[package]]
+name = "whitenoise"
+version = "6.2.0"
+description = "Radically simplified static file serving for WSGI applications"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.extras]
+brotli = ["brotli"]
+
+[[package]]
 name = "zope.event"
 version = "4.5.0"
 description = "Very basic event publishing system"
@@ -663,7 +674,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "3.10.4"
-content-hash = "5e390bfcff18bd890f09665ad15ed76b567f1b9d8d78d287df009fa7facb617a"
+content-hash = "214f7a7b9bf688d5bea90d18125a3e8de8c688c66d9fdb98e08b2ca1f80a3f84"
 
 [metadata.files]
 asgiref = [
@@ -753,5 +764,6 @@ tzdata = [
 ]
 urllib3 = []
 virtualenv = []
+whitenoise = []
 "zope.event" = []
 "zope.interface" = []

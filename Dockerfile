@@ -20,6 +20,8 @@ RUN poetry config virtualenvs.create false && poetry install
 
 ADD . /app/
 
+RUN python quizhero-api/manage.py collectstatic --noinput
+
 EXPOSE 8000
 
 CMD ["gunicorn", "-c", "gunicorn_config.py", "quizhero_api.wsgi:application"]
