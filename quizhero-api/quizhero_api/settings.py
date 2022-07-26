@@ -1,6 +1,7 @@
 from datetime import timedelta
 from pathlib import Path
 
+from dj_database_url import parse as parse_db_url
 from prettyconf import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -18,6 +19,8 @@ SECRET_KEY = config("SECRET_KEY", default="")
 DEBUG = config("DEBUG", default=False, cast=config.boolean)
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="*", cast=config.list)
+
+CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", default="*", cast=config.list)
 
 
 # Application definition
@@ -71,10 +74,11 @@ WSGI_APPLICATION = "quizhero_api.wsgi.application"
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": config(
+        "DATABASE_URL",
+        cast=parse_db_url,
+        default="postgresql://leads_api:leads_api@localhost/leads_api",
+    )
 }
 
 
