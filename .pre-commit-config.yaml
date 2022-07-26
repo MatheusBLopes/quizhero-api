@@ -17,7 +17,6 @@ repos:
       args: ['--allow-missing-credentials']
     - id: detect-private-key
     - id: forbid-new-submodules
-    - id: no-commit-to-branch
     - id: end-of-file-fixer
 
 - repo: local
