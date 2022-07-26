@@ -6,7 +6,51 @@ on:
       - master
 
 jobs:
-  lint:
+  build-ci:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [ 3.10.4 ]
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Setting Up Environment Variables
+      run: |
+        sed -i "s/\(DB_HOST=\)".*"/\1\"${{ secrets.DB_HOST }}\"/g" envvars
+        sed -i "s/\(DB_NAME=\)".*"/\1\"${{ secrets.DB_NAME }}\"/g" envvars
+        sed -i "s/\(DB_SCHEMA=\)".*"/\1\"${{ secrets.DB_SCHEMA }}\"/g" envvars
+        sed -i "s/\(DB_USER=\)".*"/\1\"${{ secrets.DB_USER }}\"/g" envvars
+        sed -i "s/\(DB_PASSWORD=\)".*"/\1\"${{ secrets.DB_PASSWORD }}\"/g" envvars
+        sed -i "s/\(DB_PORT=\)".*"/\1\"${{ secrets.DB_PORT }}\"/g" envvars
+    - name: Initialize Database
+      run: |
+        ./init-db.sh
+      env:
+        POSTGRES_HOST: "127.0.0.1"
+        POSTGRES_DB: "postgres"
+        POSTGRES_USER: "postgres"
+        POSTGRES_PASSWORD: "postgres"
+
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,6 +65,14 @@ jobs:
         python -m pip install --upgrade pip
         pip install poetry
         poetry install
+
+    - name: Run Tests
+      run: |
+        make test
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
     - name: Run Lint
       run: |
         make lint
