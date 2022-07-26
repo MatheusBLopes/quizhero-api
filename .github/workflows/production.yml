@@ -33,14 +33,6 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Setting Up Environment Variables
-      run: |
-        sed -i "s/\(DB_HOST=\)".*"/\1\"${{ secrets.DB_HOST }}\"/g" envvars
-        sed -i "s/\(DB_NAME=\)".*"/\1\"${{ secrets.DB_NAME }}\"/g" envvars
-        sed -i "s/\(DB_SCHEMA=\)".*"/\1\"${{ secrets.DB_SCHEMA }}\"/g" envvars
-        sed -i "s/\(DB_USER=\)".*"/\1\"${{ secrets.DB_USER }}\"/g" envvars
-        sed -i "s/\(DB_PASSWORD=\)".*"/\1\"${{ secrets.DB_PASSWORD }}\"/g" envvars
-        sed -i "s/\(DB_PORT=\)".*"/\1\"${{ secrets.DB_PORT }}\"/g" envvars
     - name: Initialize Database
       run: |
         ./init-db.sh
