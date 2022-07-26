@@ -45,10 +45,7 @@ jobs:
       run: |
         ./init-db.sh
       env:
-        POSTGRES_HOST: "127.0.0.1"
-        POSTGRES_DB: "postgres"
-        POSTGRES_USER: "postgres"
-        POSTGRES_PASSWORD: "postgres"
+        DATABASE_URL: "postgresql://postgres:postgres@127.0.0.1/postgres"
 
   test:
     runs-on: ubuntu-latest

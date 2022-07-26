@@ -77,7 +77,7 @@ DATABASES = {
     "default": config(
         "DATABASE_URL",
         cast=parse_db_url,
-        default="postgresql://leads_api:leads_api@localhost/leads_api",
+        default="postgresql://postgres:postgres@localhost/postgres",
     )
 }
 
