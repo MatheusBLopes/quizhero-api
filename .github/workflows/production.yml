@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  test:
+  test-and-lint:
     runs-on: ubuntu-latest
 
     services:
@@ -41,18 +41,7 @@ jobs:
     - name: Run Tests
       run: |
         make test
-  lint:
-    runs-on: ubuntu-latest
 
-    steps:
     - name: Run Lint
       run: |
         make lint
-
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag registry.heroku.com/quizhero/web
