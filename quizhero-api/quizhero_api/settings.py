@@ -36,12 +36,14 @@ INSTALLED_APPS = [
     "rest_framework",
     "apps.quizzes",
     "apps.core",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -77,7 +79,7 @@ DATABASES = {
     "default": config(
         "DATABASE_URL",
         cast=parse_db_url,
-        default="postgresql://postgres:postgres@localhost/postgres",
+        default="postgresql://postgres:postgres@db/postgres",
     )
 }
 
@@ -149,3 +151,8 @@ SIMPLE_JWT = {
 }
 
 AUTH_USER_MODEL = "core.UUIDUser"
+
+CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default="*", cast=config.list)
+
+
+CORS_ALLOW_CREDENTIALS = True
