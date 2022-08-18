@@ -11,17 +11,13 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_HOST=postgres
   web:
     build: .
     command: bash -c "python quizhero-api/manage.py migrate && python quizhero-api/manage.py runserver 0.0.0.0:8000"
     ports:
       - "8000:8000"
     environment:
-      - POSTGRES_NAME=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_HOST=postgres
+      - DATABASE_URL=postgresql://postgres:postgres@postgres/postgres
       - SECRET_KEY=asdasdasdasdasdasdasd
       - DEBUG=True
       - ALLOWED_HOSTS=*
