@@ -79,7 +79,7 @@ DATABASES = {
     "default": config(
         "DATABASE_URL",
         cast=parse_db_url,
-        default="postgresql://postgres:postgres@db/postgres",
+        default="postgresql://postgres:postgres@postgres/postgres",
     )
 }
 
